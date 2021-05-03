@@ -15,10 +15,11 @@ upMarker = markers(1:2);
 
 
 %reduce image size (makes operations faster) :
-imgCrop = imRot(round(upMarker(2)-50):round(downMarker(2)+50),:,1);
+offset = 70;
+imgCrop = imRot(round(upMarker(2)-offset):round(downMarker(2)+offset),:,1);
 figure; imshow(imgCrop)
-% imBw = imR < 100;
-% imRbw = imrotate(bw,alphaDeg);
-% figure; imshow(imRbw)
+
+
+
 
 
