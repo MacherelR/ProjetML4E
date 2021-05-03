@@ -1,6 +1,7 @@
 clc; clear; close all;
 
+%% PRE-PROCESSING
 
-print('Salut Cyril');
+
 
 
