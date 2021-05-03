@@ -6,7 +6,7 @@ imR = im(:,:,1);
 SE = strel('square',20);
 imE = imclose(imR,SE);
 bw = imE < 100;
-figure; imshow(bw)
+% figure; imshow(bw)
 centroids = regionprops(bw,'centroid');
 centerUp = centroids(1).Centroid;
 centerDown = centroids(2).Centroid;

@@ -13,9 +13,9 @@ downMarker = markers(3:end);
 upMarker = markers(1:2);
 %figure; imshow(imRot)
 
-%reduce image size (makes operations faster) :
 
-imgCrop = imRot(round(upMarker(2)-5):round(downMarker(2)+5),:,1);
+%reduce image size (makes operations faster) :
+imgCrop = imRot(round(upMarker(2)-50):round(downMarker(2)+50),:,1);
 figure; imshow(imgCrop)
 % imBw = imR < 100;
 % imRbw = imrotate(bw,alphaDeg);
