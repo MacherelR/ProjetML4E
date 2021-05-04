@@ -1,0 +1,9 @@
+Marker -> Case 1 = 58 pixels (hauteur & largeur)
+
+Hauteur case = 112 pixels
+
+Largeur case = 83 pixels
+Largeur marker = 44 pixels = hauteur
+
+
+VALEURS APPROX mesurées sur paint !
