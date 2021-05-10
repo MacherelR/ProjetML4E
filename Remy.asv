@@ -2,9 +2,8 @@ clc;clear;close all;
 
 currentFolder = pwd;
 disp(currentFolder)
-%U-Z_Lavanchy.jpeg   \Projet_OCR\RawImages\Lavanchy\scan3.jpg
-%\Scans\2021_05_07-17_05_35.jpg    \Scans\2021_05_07-17_05_35_3.jpg
-imgPath = strcat(currentFolder,'\Scans\2021_05_07-17_05_36_2.jpg');
+%U-Z_Lavanchy.jpeg   \Projet_OCR\RawImages\Lavanchy\scan3.jpg     \Scans\2021_05_07-17_05_35.jpg
+imgPath = strcat(currentFolder,'\Projet_OCR\RawImages\Lavanchy\scan3.jpg');
 im = imread(imgPath);
 
  %% Get markers and redress image
@@ -27,7 +26,7 @@ upMarker = cropMarkers(1:2);
 
 
 %% Extract every case :
-binImg = imgCrop > 150;
+gray = imgCrop;
 
 nCasesHor = 22;
 nCasesVert = 5;
@@ -42,7 +41,7 @@ b = bInit;
 
 %% Get all Lines
 for j = 1:nCasesVert
-    line = GetLine(aInit,b,binImg,nCasesHor,caseHeight,caseWidth);
+    line = GetLine(aInit,b,gray,nCasesHor,caseHeight,caseWidth);
     %txt = sprintf('i = %d | a = %d | b = %d',i,a,b)
     %disp(b)
     b = b + caseHeight + offsetRows;
@@ -50,25 +49,19 @@ for j = 1:nCasesVert
 end
 
 %% Remove blanks
-%  cleanLine = [];
-%  for i = 1: nCasesVert
-%     newL = eraseBlanks(letters{i});
-%     cleanLine{i} = newL;
-%  end
-%  % Get only lines with text
-%  idxFull = find(~cellfun(@isempty,cleanLine));
-%  cleanLines = cleanLine(idxFull);
- 
- %% Without cleaning
- for i = 1: size(letters,2)
-   figure;
-   DisplayLine(letters{i}) 
-end
+cleanLine = [];
+ for i = 1: nCasesVert
+    newL = eraseBlanks(letters{i});
+    cleanLine{i} = newL;
+ end
+ % Get only lines with text
+ idxFull = find(~cellfun(@isempty,cleanLine));
+ cleanLines = cleanLine(idxFull);
  %% Display every letter found line by line
-%  for i = 1: size(cleanLines,2)
-%     figure;
-%     DisplayLine(cleanLines{i}) 
-%  end
+ for i = 1: size(cleanLines,2)
+    figure;
+    DisplayLine(cleanLines{i}) 
+ end
 
 
 
