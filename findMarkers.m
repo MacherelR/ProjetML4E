@@ -1,11 +1,13 @@
 function [markers] = findMarkers(im)
 % Get red plan
-imR = im(:,:,1);
+imR = im;
 %figure(12); imshow(imR)
 % Isolate markers 
 SE = strel('square',20);
 imE = imclose(imR,SE);
 %figure; imshow(imE)
+% I = graythresh(imE);
+% bw = imbinarize(imE,I);
 bw = imE < 100;
 %figure; imshow(bw)
 centroids = regionprops(bw,'centroid');

@@ -4,10 +4,12 @@ currentFolder = pwd;
 disp(currentFolder)
 %U-Z_Lavanchy.jpeg   \Projet_OCR\RawImages\Lavanchy\scan3.jpg
 %\Scans\A_G.jpg    \Scans\2021_05_07-17_05_35_3.jpg
-imgPath = strcat(currentFolder,'\Projet_OCR\RawImages\Tognolini\scan1.jpg');
+imgPath = strcat(currentFolder,'\Scans\A_G.jpg');
 im = imread(imgPath);
 
  %% Get markers and redress image
+im = rgb2gray(im);
+%figure; imshow(im)
 [imRot] = RedressImage(im);
 [markers] = findMarkers(imRot);
 downMarker = markers(3:end);
@@ -37,27 +39,21 @@ for j = 1:nCasesVert
     b = b + caseHeight + offsetRows +20;
     letters{j} = line;
 end
-
-%% Remove blanks
-%  cleanLine = [];
-%  for i = 1: nCasesVert
-%     newL = eraseBlanks(letters{i});
-%     cleanLine{i} = newL;
-%  end
-%  % Get only lines with text
-%  idxFull = find(~cellfun(@isempty,cleanLine));
-%  cleanLines = cleanLine(idxFull);
  
  %% Without cleaning
- for i = 1: size(letters,2)
-   figure;
-   DisplayLine(letters{i}) 
-end
- %% Display every letter found line by line
-%  for i = 1: size(cleanLines,2)
-%     figure;
-%     DisplayLine(cleanLines{i}) 
+%  for i = 1: size(letters,2)
+%    figure;
+%    DisplayLine(letters{i}) 
 %  end
+ 
+ %% Generate Dataset
+ % A 9 premieres images -> 
+ for i = 7:22
+     txt = sprintf('G_%d.jpg',i);
+     imwrite(letters{5}{i},txt);
+ end
+
+
 
 
 
