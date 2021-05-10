@@ -1,13 +1,13 @@
 function [newLine] = eraseBlanks(line)
     n = size(line,2);
-    for i = 1 : n
+    blankIdx = [];
+    for i = 1:n
         letter = line{i};
-        bin = letter > 100;
-        nDark = sum(~bin(:));
-        if nDark < 50
-            line{i} = [];
+        nDark = sum(~letter(:));
+        if nDark < 200
+            blankIdx = [blankIdx,i];
         end
     end
+    line(blankIdx) = [];
     newLine = line;
 end
-
