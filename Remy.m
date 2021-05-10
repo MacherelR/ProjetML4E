@@ -3,49 +3,38 @@ clc;clear;close all;
 currentFolder = pwd;
 disp(currentFolder)
 %U-Z_Lavanchy.jpeg   \Projet_OCR\RawImages\Lavanchy\scan3.jpg
-%\Scans\2021_05_07-17_05_35.jpg    \Scans\2021_05_07-17_05_35_3.jpg
-imgPath = strcat(currentFolder,'\Scans\2021_05_07-17_05_36_2.jpg');
+%\Scans\A_G.jpg    \Scans\2021_05_07-17_05_35_3.jpg
+imgPath = strcat(currentFolder,'\Projet_OCR\RawImages\Tognolini\scan1.jpg');
 im = imread(imgPath);
 
  %% Get markers and redress image
-
-% figure; imshow(imgCrop)
 [imRot] = RedressImage(im);
 [markers] = findMarkers(imRot);
 downMarker = markers(3:end);
 upMarker = markers(1:2);
-%figure; imshow(imRot)
-
-
 %% reduce image size (makes operations faster) :
 offset = 70;
 imgCrop = imRot(round(upMarker(2)-offset):round(downMarker(2)+offset),:,1);
-%imwrite(imgCrop,'Cropped.png');
 cropMarkers = findMarkers(imgCrop);
 downMarker = cropMarkers(3:end);
 upMarker = cropMarkers(1:2);
-
-
 %% Extract every case :
 binImg = imgCrop > 150;
-
 nCasesHor = 22;
 nCasesVert = 5;
-caseHeight = 110;
-caseWidth = 83;
-offsetLine = 60;
+caseHeight = 90;
+caseWidth = 70;
+offsetLine = 65;
+offsetUp = 45;
 offsetRows = 35;
 aInit = round(upMarker(1))+offsetLine;
-bInit = round(upMarker(2))- 55;
+bInit = round(upMarker(2))- offsetUp;
 letters = [];
 b = bInit;
-
 %% Get all Lines
 for j = 1:nCasesVert
     line = GetLine(aInit,b,binImg,nCasesHor,caseHeight,caseWidth);
-    %txt = sprintf('i = %d | a = %d | b = %d',i,a,b)
-    %disp(b)
-    b = b + caseHeight + offsetRows;
+    b = b + caseHeight + offsetRows +20;
     letters{j} = line;
 end
 
