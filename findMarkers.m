@@ -10,6 +10,7 @@ imE = imclose(imR,SE);
 % bw = imbinarize(imE,I);
 bw = imE < 100;
 %figure; imshow(bw)
+% imwrite(bw,'markers.jpg');
 centroids = regionprops(bw,'centroid');
 if centroids(1).Centroid(2) > centroids(2).Centroid(2)
     centerUp = centroids(2).Centroid;

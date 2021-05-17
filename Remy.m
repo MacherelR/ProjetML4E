@@ -4,7 +4,7 @@ currentFolder = pwd;
 disp(currentFolder)
 %U-Z_Lavanchy.jpeg   \Projet_OCR\RawImages\Lavanchy\scan3.jpg
 %\Scans\A_G.jpg    \Scans\2021_05_07-17_05_35_3.jpg
-imgPath = strcat(currentFolder,'\Scans\A_G.jpg');
+imgPath = strcat(currentFolder,'\Scans\A_H.jpg');
 im = imread(imgPath);
 
  %% Get markers and redress image
@@ -47,10 +47,11 @@ end
 %  end
  
  %% Generate Dataset
- % A 9 premieres images -> 
- for i = 7:22
-     txt = sprintf('G_%d.jpg',i);
-     imwrite(letters{5}{i},txt);
+ j = 1;
+ for i = 14:22
+     txt = sprintf('B_%d.jpg',j);
+     imwrite(letters{1}{i},txt);
+     j = j+1;
  end
 
 
