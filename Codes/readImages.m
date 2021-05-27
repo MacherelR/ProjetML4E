@@ -9,22 +9,32 @@ function [casesImg,lettersPos,labels] = readImages(folderPath,training)
     casesImg = [];
     lettersPos = [];
     labels = [];
+    currentFolder = pwd;
     for k = 1:length(allFiles)
         baseFileName = allFiles(k).name;
         fullFileName = fullfile(folderPath, baseFileName);
         fprintf('Now reading %s\n\n', baseFileName)
         % Read image 
-        img = imread(strcat(pwd,fullFileName));
+        imgPath = strcat(currentFolder,fullFileName);
+        img = imread(imgPath);
         % Rotation + markers position
         imgGray = rgb2gray(img);
+%         if baseFileName == 'D.jpg' 
+%             imshow(imgGray)
+%             disp('Breakpoint');
+%         end
         [imRot] = RedressImage(imgGray);
         [markers] = findMarkers(imRot);
+%         if baseFileName == 'D.jpg' 
+%             disp('Breakpoint');
+%         end
         downMarker = markers(3:end);
         upMarker = markers(1:2);
         % Extract cases
-        imgBin = imgGray > 200;
+        imgBin = imRot > 200;
         [cases,isEmpty] = getCases(imgBin,upMarker(1),upMarker(2),training);
         casesImg{k} = cases;
+        %DisplayImage(cases);
         % As training images are all fully filled, passing empty
         % verification
         if training == false

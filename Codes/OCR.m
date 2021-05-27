@@ -3,8 +3,9 @@ clear; close all;
 %% Useful Variables 
 showDisplays = false;
 nLetters = 26;
+
 %% Reading all images in folder for training (Preprocessing)
-fNameTraining = 'trainingDatas.mat';
+fNameTraining = 'trainingDatasStruct.mat';
 ex = exist(fNameTraining,'file');
 if ex == 2
     load 'trainingDatas.mat';
@@ -14,13 +15,14 @@ if ex == 2
     load 'trainingDatasStruct.mat';
     datas = DataSave.Datas;
     y = DataSave.Outputs;
+    OutMat = DataSave.OutMat;
 else
     [Images,~,labels] = readImages('\TrainingImages',false);
     saveTrainingDatas(Images,labels);
     labelsArray = cell2mat(labels);
     [datas,y,OutMat] = formDataArray(Images,labelsArray);
     %save trainingDatasArray.mat datas
-    DataSave = struct('Datas',datas,'Outputs',y);
+    DataSave = struct('Datas',datas,'Outputs',y,'OutMat',OutMat);
     save trainingDatasStruct.mat DataSave
 end
 
@@ -30,13 +32,13 @@ if showDisplays == true
 end
 %% SHUFFLE
 % r2 = randi(10,1000,1);
-
-%% Creating neural network (cf ex4)
 inputLayerSize = 91*69; % Input layer (size of a letter)
 hiddenLayerSize = 50; % Check how to define size
 numLabels = 26; % From A to Z 
 X = datas'; % Input
 Y = y; % Output vector (or matrix) containing labels
+%% Creating neural network (cf ex4)
+
 if exist('nnParams.mat','file') == 2
     load 'nnParams.mat'
 else
@@ -78,24 +80,42 @@ if exist('NN_OCR.mat','file') == 2
 else
     ex = eye(26);
     Inputs = X';
+    Outputs = Y;
     nnstart
-    i = randi(length(y));
+end
+
+%% Saving NN
+if exist('NN_OCR.mat','file') ~= 2
+    NewNN = NN_OCR;
+    save NN_OCR.mat NewNN
+end
+%% Try on other image 
+labelArray = ['A', 'B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+i = randi(length(y));
     ysim = NN_OCR(X(i,:)');
     [~,class] = max(ysim);
     imshow(reshape(X(i,:),91,69))
     fprintf('\nTrue class: %d  |  Predicted class: %d | Probability of match: %.1f%% \n',y(i),class,100*ysim(class));
     disp(labelArray(y(i)))
-    NewNN = NN_OCR;
-    save NN_OCR.mat NewNN
-end
-
-%% Try on other image 
 %% Checker la verification vide/lettre --> Erreur
-%% TODO: Tester le NN sur cette image!
+%% TODO: Tester le NN sur cette image! Reshape 1,110 ne marche pas ! Ordre perturbé !
+% Positions est juste en 5x22 mais du coup faux après
 fileName = '\Lavanchy\scan2.jpg';
 [ImagesDL,positions] = ReadUniqueImage(fileName);
 %datasDL = formDataArray(ImagesDL,labelsArrayDL);
 % Unroll images
-ImgLine = reshape(ImagesDL,110,1);
-positionsLine = cell2mat(reshape(positions,110,1));
-indexes = find(positionsLine == 1);
+ImgLine = reshape(ImagesDL',110,1);
+positionsLine = cell2mat(reshape(positions',110,1));
+indexes = find(positionsLine == 0);
+ImgUnrolled = unRollImages(ImgLine);¨
+ImgUnrolled = ImgUnrolled';
+for j =1 : size(ImgUnrolled,1)
+   %disp(j)
+   if ismember(j,indexes)
+       ysim = NN_OCR(ImgUnrolled(j,:)');
+       [~,class] = max(ysim);
+       figure;
+       imshow(reshape(ImgUnrolled(j,:),91,69));
+       fprintf('\n Predicted class: %s\n',labelArray(class));
+   end
+end

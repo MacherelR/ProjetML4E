@@ -7,7 +7,7 @@ function [cases,isEmpty] = getCases(binImg,markerX,markerY,training)
     nHorOffset = 83; %Horizontal offset between boxes
     caseHeight = 90;
     caseWidth = 68;
-    minBlackPixels = 200; %Minimum of black pixels to detect if a letter is present or not
+    minBlackPixels = 300; %Minimum of black pixels to detect if a letter is present or not
     offsetLine = 65;
     offsetUp = 45;
     nPixels = caseHeight * caseWidth;
@@ -25,7 +25,7 @@ function [cases,isEmpty] = getCases(binImg,markerX,markerY,training)
            cases{i,j} = imCase;
            %disp(sum(~imCase(:)))
            if training == false
-               empty = (sum(imCase(:))) < minBlackPixels;
+               empty = (sum(~imCase(:))) < minBlackPixels;
                isEmpty{i,j} = empty;
            end
        end
