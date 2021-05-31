@@ -1,0 +1,10 @@
+Checker les seuils pour binarisation 
+cvpartition function --> aléatoire
+
+Essayer deepLearning toolbox
+
+Overfitting : Faire apprentissage et c^voir si l'erreur augmente après un certain nombre d'epoch sur la validation !
+Essayer de diminuer la taille des cases et vérifier les "offsets" de décalage !
+
+Peut etre diminuer taille de l'image d'entrée !
+

@@ -32,11 +32,16 @@ if showDisplays == true
 end
 %% SHUFFLE
 % r2 = randi(10,1000,1);
-inputLayerSize = 91*69; % Input layer (size of a letter)
-hiddenLayerSize = 50; % Check how to define size
-numLabels = 26; % From A to Z 
+
 X = datas'; % Input
 Y = y; % Output vector (or matrix) containing labels
+idxPermutation = randperm(size(X,1));
+XShuffle = X(idxPermutation,:);
+YShuffle = Y(idxPermutation);
+OutMatShuffle = OutMat(:,idxPermutation)'; 
+inputLayerSize = size(XShuffle,2); % Input layer (size of a letter)
+hiddenLayerSize = 300; % Check how to define size
+numLabels = 26; % From A to Z 
 %% Creating neural network (cf ex4)
 
 if exist('nnParams.mat','file') == 2
@@ -47,75 +52,48 @@ else
     % Unroll parameters
     initialParams = [initial_Theta1(:) ; initial_Theta2(:)];
     lambda = 0.3; % Regularization parameter
-    options = optimset('MaxIter',100); 
-    costFunction = @(p) nnCostFunction(p,inputLayerSize,hiddenLayerSize,numLabels,X,Y,lambda);
+    [trainInd,valInd,~] = dividerand(size(XShuffle,1),0.7,0.3,0);
+    options = optimset('MaxIter',200); 
+    Xtrain = XShuffle(trainInd,:);
+    Ytrain = YShuffle(trainInd);
+    Xval = XShuffle(valInd,:);
+    Yval = YShuffle(valInd);
+    costFunction = @(p) nnCostFunction(p,inputLayerSize,hiddenLayerSize,numLabels,Xtrain,Ytrain,lambda);
     [nnParams,~] = fmincg(costFunction,initialParams,options);
     save nnParams.mat nnParams;
 end
 %% Test model
-% % Obtain Theta1 and Theta2 back from nn_params
-% Theta1 = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), hiddenLayerSize, (inputLayerSize + 1));
-% Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), numLabels, (hiddenLayerSize + 1));
-%  
-% pred = predict(Theta1, Theta2, X);
-% a = 1;
-% labelArray = ['A', 'B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-% for i=1:numLabels
-%    predL = pred(a:(a+109));
-%    yL = y(a:(a+109));
-%    str = "\nTraining set accuracy for letter ";
-%    newStr = strcat(str,string(labelArray(i)));
-%    newStr = strcat(newStr, sprintf(' ->  %.3f',mean(double(predL == yL) * 100,'all')));
-%    fprintf(newStr);
-%    a = a+110;
-%    disp(a)
-% end
-% % predA = pred(1:110);
-% % yA = y(1:110)';
-% % fprintf('\nTraining Set Accuracy: %f\n', mean(double(predA == yA) * 100);
-%% Implement
-if exist('NN_OCR.mat','file') == 2
-    load NN_OCR.mat;
-    NN_OCR = NewNN;
-else
-    ex = eye(26);
-    Inputs = X';
-    Outputs = Y;
-    nnstart
-end
-
-%% Saving NN
-if exist('NN_OCR.mat','file') ~= 2
-    NewNN = NN_OCR;
-    save NN_OCR.mat NewNN
-end
-%% Try on other image 
-labelArray = ['A', 'B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+% Obtain Theta1 and Theta2 back from nn_params
+Theta1 = reshape(nnParams(1:hiddenLayerSize * (inputLayerSize + 1)), hiddenLayerSize, (inputLayerSize + 1));
+Theta2 = reshape(nnParams((1 + (hiddenLayerSize * (inputLayerSize + 1))):end), numLabels, (hiddenLayerSize + 1));
+dimX = 75; dimY = 53;
+%pred = predict(Theta1, Theta2, X);
+a = 1;
 i = randi(length(y));
-    ysim = NN_OCR(X(i,:)');
-    [~,class] = max(ysim);
-    imshow(reshape(X(i,:),91,69))
-    fprintf('\nTrue class: %d  |  Predicted class: %d | Probability of match: %.1f%% \n',y(i),class,100*ysim(class));
-    disp(labelArray(y(i)))
-%% Checker la verification vide/lettre --> Erreur
-%% TODO: Tester le NN sur cette image! Reshape 1,110 ne marche pas ! Ordre perturbé !
-% Positions est juste en 5x22 mais du coup faux après
-fileName = '\Lavanchy\scan2.jpg';
+labelArray = ['A', 'B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+ysimTraining = predict(Theta1,Theta2,Xtrain);
+ysimVal = predict(Theta1,Theta2,Xval);
+fprintf('\n Training accuracy : %.3f',mean(double(ysimTraining == Ytrain'))*100);
+fprintf('\n Validation accuracy : %.3f',mean(double(ysimVal == Yval'))*100);
+
+
+%% Test model
+fileName = '\Lavanchy\Cyril.jpg';
 [ImagesDL,positions] = ReadUniqueImage(fileName);
 %datasDL = formDataArray(ImagesDL,labelsArrayDL);
 % Unroll images
 ImgLine = reshape(ImagesDL',110,1);
 positionsLine = cell2mat(reshape(positions',110,1));
 indexes = find(positionsLine == 0);
-ImgUnrolled = unRollImages(ImgLine);¨
+
+ImgUnrolled = unRollImages(ImgLine);
 ImgUnrolled = ImgUnrolled';
-for j =1 : size(ImgUnrolled,1)
-   %disp(j)
-   if ismember(j,indexes)
-       ysim = NN_OCR(ImgUnrolled(j,:)');
-       [~,class] = max(ysim);
-       figure;
-       imshow(reshape(ImgUnrolled(j,:),91,69));
-       fprintf('\n Predicted class: %s\n',labelArray(class));
-   end
+ImgTest = ImgUnrolled(indexes,:);
+ysimTest = predict(Theta1,Theta2,ImgTest);
+strOut = "";
+for i=1:length(ysimTest)
+   %disp(labelArray(ysimTest(i))); 
+   strOut = strcat(strOut,labelArray(ysimTest(i)));
 end
+disp(strOut)
+

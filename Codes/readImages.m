@@ -31,7 +31,10 @@ function [casesImg,lettersPos,labels] = readImages(folderPath,training)
         downMarker = markers(3:end);
         upMarker = markers(1:2);
         % Extract cases
-        imgBin = imRot > 200;
+        %% Seuillage adaptatif voir otsu adapter le min/max et le seuil
+        T = graythresh(imRot);
+        imgBin = imbinarize(imRot,T);
+        %imgBin = imRot > T;
         [cases,isEmpty] = getCases(imgBin,upMarker(1),upMarker(2),training);
         casesImg{k} = cases;
         %DisplayImage(cases);

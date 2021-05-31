@@ -22,6 +22,7 @@ function [cases,isEmpty] = getCases(binImg,markerX,markerY,training)
            imCase = binImg(yTop:yBottom,xLeft:xRight);
            SE = strel('square',3);
            imCase = imerode(imCase,SE);
+           imCase = imcrop(imCase,[7,8,52,74]);
            cases{i,j} = imCase;
            %disp(sum(~imCase(:)))
            if training == false

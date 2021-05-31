@@ -9,7 +9,9 @@ imE = imclose(imR,SE);
 % I = graythresh(imE);
 % bw = imbinarize(imE,I);
 bw = imE < 100;
-%figure; imshow(bw)
+figure; imshow(bw)
+hold on;
+
 % imwrite(bw,'markers.jpg');
 centroids = regionprops(bw,'centroid');
 if centroids(1).Centroid(2) > centroids(2).Centroid(2)
@@ -19,7 +21,8 @@ else
     centerUp = centroids(1).Centroid;
     centerDown = centroids(2).Centroid;
 end
-
+% Plot cross at row 100, column 50
+plot(centerUp(1),centerUp(2), 'r+', 'MarkerSize', 30, 'LineWidth', 2);
 markers = [centerUp,centerDown];
 end
 
