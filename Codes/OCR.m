@@ -40,7 +40,7 @@ XShuffle = X(idxPermutation,:);
 YShuffle = Y(idxPermutation);
 OutMatShuffle = OutMat(:,idxPermutation)'; 
 inputLayerSize = size(XShuffle,2); % Input layer (size of a letter)
-hiddenLayerSize = 300; % Check how to define size
+hiddenLayerSize = 400; % Check how to define size
 numLabels = 26; % From A to Z 
 %% Creating neural network (cf ex4)
 
@@ -53,7 +53,7 @@ else
     initialParams = [initial_Theta1(:) ; initial_Theta2(:)];
     lambda = 0.3; % Regularization parameter
     [trainInd,valInd,~] = dividerand(size(XShuffle,1),0.7,0.3,0);
-    options = optimset('MaxIter',200); 
+    options = optimset('MaxIter',100); 
     Xtrain = XShuffle(trainInd,:);
     Ytrain = YShuffle(trainInd);
     Xval = XShuffle(valInd,:);
@@ -78,7 +78,7 @@ fprintf('\n Validation accuracy : %.3f',mean(double(ysimVal == Yval'))*100);
 
 
 %% Test model
-fileName = '\Lavanchy\Cyril.jpg';
+fileName = '\Lavanchy\scan2.jpg';
 [ImagesDL,positions] = ReadUniqueImage(fileName);
 %datasDL = formDataArray(ImagesDL,labelsArrayDL);
 % Unroll images

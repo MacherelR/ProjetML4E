@@ -5,7 +5,7 @@ currentFolder = pwd;
 %disp(currentFolder)
 %U-Z_Lavanchy.jpeg   \Projet_OCR\RawImages\Lavanchy\scan3.jpg
 %\Scans\A_G.jpg    \Scans\2021_05_07-17_05_35_3.jpg '\DoNotShareThat\A1.jpg
-imgPath = strcat(currentFolder,'\DoNotShareThat\A1.jpg');
+imgPath = strcat(currentFolder,'\TrainingImagesToTry\M_Rosselli.jpg');
 im = imread(imgPath);
 %% Rotate and get markers 
 im = rgb2gray(im);
@@ -13,15 +13,14 @@ im = rgb2gray(im);
 %imwrite(im,'GrayScale.jpg')
 % pause;
 [imRot] = RedressImage(im);
-%figure; imshow(imRot)
+figure; imshow(imRot)
 [markers] = findMarkers(imRot);
 downMarker = markers(3:end);
 upMarker = markers(1:2);
 %% Extract cases
 binImg = imRot > 200;
 [cases,isEmpty] = getCases(binImg,upMarker(1),upMarker(2),true);
-
-
+figure;imshow(cases{1,8}) % test de lecture à la main 
 
 %% Trash
 
