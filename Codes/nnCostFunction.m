@@ -16,6 +16,9 @@ function [J grad] = nnCostFunction(nn_params, ...
 
 % Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 % for our 2 layer neural network
+global errValidation;
+global xValid;
+global yValid;
 Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
                  hidden_layer_size, (input_layer_size + 1));
 
@@ -39,25 +42,25 @@ Theta2_grad = zeros(size(Theta2));
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
 %
-tic;
+
 a1 = [ones(m,1) X];
 z2 = a1*Theta1';
 a2 = [ones(m,1), sigmoid(z2)];
 z3 = a2* Theta2';
 a3 = sigmoid(z3);
-
-% Y = zeros(m,num_labels);
-% Y(sub2ind(size(Y), 1:numel(y), y')) = 1;
-
-%k = y_reshape;
-% for i = 1:m
-%    y_reshape(i,k(i)) = 1; 
-% end
+mVal = size(xValid, 1);
+a1Val = [ones(mVal,1) xValid];
+z2val = a1Val * Theta1';
+a2Val = [ones(mVal,1), sigmoid(z2val)];
+z3 = a2Val * Theta2';
+a3val = sigmoid(z3);
 Y = dummyvar(y);
-% Y = y;
+Yval = dummyvar(yValid);
 theta1Wbias = Theta1(:,2:end);
 theta2Wbias = Theta2(:,2:end);
 J = sum((-Y) .* log(a3) - (1-Y).* log(1-a3),'all')/m + lambda/(2*m)* (sum(theta1Wbias.^2,'all')+ sum(theta2Wbias.^2,'all'));
+% Jval = sum((-Yval) .* log(a3val) - (1-Yval).* log(1-a3val),'all')/m + lambda/(2*m)* (sum(theta1Wbias.^2,'all')+ sum(theta2Wbias.^2,'all'));
+% errValidation = [errValidation, Jval];
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
@@ -79,36 +82,8 @@ delta3 = a3-Y;
 delta2 = delta3*Theta2 .* sigmoidGradient([ones(m,1),z2]);
 delta2 = delta2(:,2:end);
 
-% Theta1_grad = delta2'*a1;
-% Theta2_grad = delta3'*a2;
-%size(Theta1,1)
 Theta1_grad = 1/m*(delta2'*a1) + lambda/m* [zeros(hidden_layer_size,1), theta1Wbias];
 Theta2_grad = 1/m*(delta3'*a2) + lambda/m*[zeros(num_labels,1), theta2Wbias];
-
-% % for i = 1:m
-% %    % Forward prop
-% %    a1 = [1; X(i,:)'];
-% %    z2 = Theta1 * a1;
-% %    a2 = [1; sigmoid(z2)];
-% %    z3 = Theta2 * a2;
-% %    a3 = sigmoid(z3);
-% %    
-% %    % Back prop
-% %    temp = zeros(num_labels,1);
-% %    temp(y(i)) = 1;
-% %    delta3 = a3-temp;
-% %    D2 = [1; sigmoidGradient(z2)];
-% %    delta2 = (Theta2' * delta3).* D2;
-% %    delta2 = delta2(2:end);
-% %    
-% %    Theta1_grad = Theta1_grad + delta2*a1';
-% %    Theta2_grad = Theta2_grad + delta3*a2';
-% % end
-% % 
-% % Theta1_grad = Theta1_grad/m;
-% % Theta2_grad = Theta2_grad/m;
-
-
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
@@ -124,7 +99,5 @@ Theta2_grad = 1/m*(delta3'*a2) + lambda/m*[zeros(num_labels,1), theta2Wbias];
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-Time = toc;
-disp(Time)
 
 end

@@ -22,8 +22,15 @@ function [cases,isEmpty] = getCases(binImg,markerX,markerY,training)
            imCase = binImg(yTop:yBottom,xLeft:xRight);
            SE = strel('square',3);
            imCase = imerode(imCase,SE);
-           imCase = imcrop(imCase,[5,3,58,84]);
            imCase = imresize(imCase,0.5);
+           imCase = ~imCase;
+           areas = regionprops(imCase,'area');
+           aMean = mean([areas.Area]);
+           %disp(aMean)
+           if ~isnan(aMean) 
+               imCase = bwareaopen(imCase,round(aMean));
+           end
+           imCase = ~imCase;
            cases{i,j} = imCase;
            %disp(sum(~imCase(:)))
            if training == false
