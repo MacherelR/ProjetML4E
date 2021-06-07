@@ -74,16 +74,21 @@ elseif in == 'y'
     fprintf('\n Validation accuracy : %.3f',mean(double(ysimVal == Yval'))*100);
     save nnParams.mat nnParams;
 end
+
+%% Essai SVM 
+C = 1;
+sigma = 0.2;
+%sim = svmTrain(Xtrain,Ytrain,C,@(,1e-3,20)
 %% Test model
 % Obtain Theta1 and Theta2 back from nn_params
 
 dimX = 75; dimY = 53;
-rDimX = round(0.5*dimX); rDimY = round(0.5*dimY);
+rDimX = round(0.5*dimX); rDimY = round(0.5);
 %pred = predict(Theta1, Theta2, X);
 a = 1;
 labelArray = ['A', 'B', 'C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 %% Test model
-fileName = '\Lavanchy\scan1.jpg';
+fileName = '\Lavanchy\A-j_Lavanchy.jpeg';
 [ImagesDL,positions] = ReadUniqueImage(fileName);
 %datasDL = formDataArray(ImagesDL,labelsArrayDL);
 % Unroll images
