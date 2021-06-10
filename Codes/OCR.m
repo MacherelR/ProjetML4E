@@ -132,5 +132,5 @@ ImgTest = ImgUnrolled(indexes,:);
 y = net(ImgTest');
 %ySVM = predict(gaussianSVM,ImgTest)
 [~,yL] = max(y);
-disp(labelArray(yL))
+disp(labelArray(round(yL)))
 
