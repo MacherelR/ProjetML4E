@@ -81,7 +81,7 @@ Ysvm = Y';
 datasSvm = [Xsvm , Ysvm];
 %datasSvm = uint8(datasSvm);
 %gaussianSVM = fitcecoc(Xsvm,Ysvm)
-                 
+                
 %% Test model
 fileName = '\Lavanchy\scan1.jpg';
 [ImagesDL,positions] = ReadUniqueImage(fileName);
@@ -97,12 +97,14 @@ ImgUnrolled = ImgUnrolled';
 ImgTest = ImgUnrolled(indexes,:);
 %ysimTest = predict(Theta1,Theta2,ImgTest);
 ySoluce = [4; 1; 22; 9; 4; 12; 1; 22; 1; 14; 3; 8; 25]; % DAVID LAVANCHY
+disp(labelArray(ySoluce))
 %y = net(ImgTest');
-ySVM = predict(gaussianSVM,ImgTest)
-[~,yL] = max(y);
+%ySVM = predict(gaussianSVM,ImgTest)
+ySVM = trainedModel.predictFcn(ImgTest);
+%[~,yL] = max(y);
 
-disp(labelArray(yL))
+%disp(labelArray(yL))
 disp(labelArray(ySVM))
-fprintf('Pourcentage réussite NN : %f',mean(double(ySoluce == yL'))*100)
+%fprintf('Pourcentage réussite NN : %f',mean(double(ySoluce == yL'))*100)
 fprintf('Pourcentage réussite SVM : %f',mean(double(ySoluce == ySVM))*100)
 

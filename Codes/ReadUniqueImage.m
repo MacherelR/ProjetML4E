@@ -10,10 +10,10 @@ function [casesImg,lettersPos] = ReadUniqueImage(imgPath)
     [markers] = findMarkers(imRot);
     downMarker = markers(3:end);
     upMarker = markers(1:2);
-    imshow(imRot);
-    axis on;
-    hold on;
-    plot(upMarker(1),upMarker(2),'r+','MarkerSize',30,'LineWidth',2);
+    %imshow(imRot);
+%     axis on;
+%     hold on;
+%     plot(upMarker(1),upMarker(2),'r+','MarkerSize',30,'LineWidth',2);
     % Extract cases
     T = graythresh(imRot);
     imgBin = imbinarize(imRot,T);
