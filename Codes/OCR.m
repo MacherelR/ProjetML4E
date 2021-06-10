@@ -79,7 +79,7 @@ boxconstraint = 1;
 Xsvm = Xnet';
 Ysvm = Y';
 datasSvm = [Xsvm , Ysvm];
-datasSvm = uint8(datasSvm);
+%datasSvm = uint8(datasSvm);
 %gaussianSVM = fitcecoc(Xsvm,Ysvm)
                  
 %% Test model
