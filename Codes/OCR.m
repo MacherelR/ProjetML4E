@@ -97,7 +97,7 @@ ImgUnrolled = ImgUnrolled';
 ImgTest = ImgUnrolled(indexes,:);
 %ysimTest = predict(Theta1,Theta2,ImgTest);
 ySoluce = [4; 1; 22; 9; 4; 12; 1; 22; 1; 14; 3; 8; 25]; % DAVID LAVANCHY
-y = net(ImgTest');
+%y = net(ImgTest');
 ySVM = predict(gaussianSVM,ImgTest)
 [~,yL] = max(y);
 
