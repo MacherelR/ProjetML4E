@@ -48,9 +48,10 @@ global hiddenLayerSize; hiddenLayerSize = 300; % Check how to define size
 global numLabels; numLabels = 26; % From A to Z 
 nIter = 300;
 lambda = 0.3; % Regularization parameter
-%% AVEC NET 
 Xnet = XShuffle';
 Ynet = OutMat;
+%% AVEC NET 
+
 trainFcn = 'trainscg'; % Gradient descent
 net = patternnet(hiddenLayerSize, trainFcn); % Create the net variable
 net.layers{1}.transferFcn = 'logsig'; % Change default transfer function to match ex3/4 implementation
@@ -99,12 +100,9 @@ ySoluce = [4; 1; 22; 9; 4; 12; 1; 22; 1; 14; 3; 8; 25]; % DAVID LAVANCHY
 y = net(ImgTest');
 ySVM = predict(gaussianSVM,ImgTest)
 [~,yL] = max(y);
-<<<<<<< HEAD
+
 disp(labelArray(yL))
 disp(labelArray(ySVM))
 fprintf('Pourcentage réussite NN : %f',mean(double(ySoluce == yL'))*100)
 fprintf('Pourcentage réussite SVM : %f',mean(double(ySoluce == ySVM))*100)
-=======
-disp(labelArray(round(yL)))
 
->>>>>>> cf9e3289958ce088a53bfc8c60eb663328cca820
