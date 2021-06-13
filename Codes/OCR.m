@@ -51,7 +51,7 @@ lambda = 0.3; % Regularization parameter
 Xnet = XShuffle';
 Ynet = OutMat;
 %% AVEC NET 
-
+% network dans NN.mat et tr dans tr.mat
 trainFcn = 'trainscg'; % Gradient descent
 net = patternnet(hiddenLayerSize, trainFcn); % Create the net variable
 net.layers{1}.transferFcn = 'logsig'; % Change default transfer function to match ex3/4 implementation
@@ -64,19 +64,22 @@ net.divideParam.valRatio = 20/100;
 net.divideParam.testRatio = 20/100;
 [net,tr] = train(net,Xnet,Ynet);
 plotperform(tr)
-
-trainSet = Xnet(:,tr.trainInd);
-testSet = Xnet(:,tr.testInd);
-valSet = Xnet(:,tr.valInd);
+%% Bla bla
+trainInd = round(tr.trainInd);
+valInd = round(tr.valInd);
+testInd = round(tr.testInd);
+trainSet = Xnet(:,trainInd);
+testSet = Xnet(:,testInd);
+valSet = Xnet(:,valInd);
 yTrain = net(trainSet);
 [~,yTrain] = max(yTrain);
-yStrain = yShuffle(tr.trainInd);
+yStrain = YShuffle(trainInd);
 yTest = net(testSet);
 [~,yTest] = max(yTest);
-yStest = yShuffle(tr.testInd);
+yStest = YShuffle(testInd);
 yVal = net(valSet);
 [~,yVal] = max(yVal);
-ySval = yShuffle(tr.valInd);
+ySval = YShuffle(valInd);
 fprintf('\n Training accuracy : %.3f',mean(double(yStrain == yTrain))*100);
 fprintf('\n Validation accuracy : %.3f',mean(double(ySval == yVal))*100);
 fprintf('\n Test accuracy : %.3f',mean(double(yStest == yTest))*100);
@@ -114,11 +117,11 @@ ySoluce = [4; 1; 22; 9; 4; 12; 1; 22; 1; 14; 3; 8; 25]; % DAVID LAVANCHY
 disp(labelArray(ySoluce))
 y = net(ImgTest');
 %ySVM = predict(gaussianSVM,ImgTest)
-ySVM = trainedModel.predictFcn(ImgTest);
+% ySVM = trainedModel.predictFcn(ImgTest);
 [~,yL] = max(y);
 
 disp(labelArray(yL))
-disp(labelArray(ySVM))
+% disp(labelArray(ySVM))
 fprintf('Pourcentage réussite NN : %f',mean(double(ySoluce == yL'))*100)
-fprintf('Pourcentage réussite SVM : %f',mean(double(ySoluce == ySVM))*100)
+% fprintf('Pourcentage réussite SVM : %f',mean(double(ySoluce == ySVM))*100)
 
