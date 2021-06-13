@@ -44,9 +44,9 @@ YShuffle = Y;%Y(idxPermutation);
 %OutMatShuffle = OutMat(:,idxPermutation)'; 
 %% GLobal Variables
 global inputLayerSize; inputLayerSize = size(XShuffle,2); % Input layer (size of a letter)
-global hiddenLayerSize; hiddenLayerSize = 300; % Check how to define size
+global hiddenLayerSize; hiddenLayerSize = 250; % Check how to define size
 global numLabels; numLabels = 26; % From A to Z 
-nIter = 200;
+nIter = 300;
 lambda = 0.3; % Regularization parameter
 Xnet = XShuffle';
 Ynet = OutMat;
@@ -69,17 +69,12 @@ trainSet = Xnet(:,tr.trainInd);
 testSet = Xnet(:,tr.testInd);
 valSet = Xnet(:,tr.valInd);
 yTrain = net(trainSet);
-[~,yTrain] = max(yTrain);
-yStrain = yShuffle(tr.trainInd);
+[~,yTrain] = max(yTrai);
 yTest = net(testSet);
-[~,yTest] = max(yTest);
-yStest = yShuffle(tr.testInd);
 yVal = net(valSet);
-[~,yVal] = max(yVal);
-ySval = yShuffle(tr.valInd);
-fprintf('\n Training accuracy : %.3f',mean(double(yStrain == yTrain))*100);
-fprintf('\n Validation accuracy : %.3f',mean(double(ySval == yVal))*100);
-fprintf('\n Test accuracy : %.3f',mean(double(yStest == yTest))*100);
+fprintf('\n Training accuracy : %.3f',mean(double(ysimTraining == Ytrain'))*100);
+fprintf('\n Validation accuracy : %.3f',mean(double(ysimVal == Yval'))*100);
+fprintf('\n Validation accuracy : %.3f',mean(double(ysimVal == Yval'))*100);
 %% Test model
 dimX = 75; dimY = 53;
 rDimX = round(0.5*dimX); rDimY = round(0.5);
