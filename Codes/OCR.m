@@ -115,7 +115,7 @@ end
 % fprintf('Error : %f',genError)
 
 %% Test model
-fileName = '\Lavanchy\A-J_Lavanchy.jpeg'; %'\Lavanchy\scan2.jpg'
+fileName = '\TestSet\testset_5.jpg'; %'\Lavanchy\scan2.jpg'
 [ImagesDL,positions] = ReadUniqueImage(fileName);
 
 % Unroll images
@@ -127,7 +127,7 @@ ImgUnrolled = unRollImages(ImgLine);
 ImgUnrolled = ImgUnrolled';
 ImgTest = ImgUnrolled(indexes,:);
 ySoluce = [4; 1; 22; 9; 4; 12; 1; 22; 1; 14; 3; 8; 25]; % DAVID LAVANCHY
-%disp(labelArray(ySoluce))
+% disp(labelArray(ySoluce))
 y = net(ImgTest');
 ySVM = trainedModel.predictFcn(ImgTest);
 [~,yL] = max(y);
