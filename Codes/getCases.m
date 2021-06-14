@@ -26,13 +26,11 @@ function [cases,isEmpty] = getCases(binImg,markerX,markerY,training)
            imCase = ~imCase;
            areas = regionprops(imCase,'area');
            aMean = mean([areas.Area]);
-           %disp(aMean)
            if ~isnan(aMean) 
                imCase = bwareaopen(imCase,round(aMean));
            end
            imCase = ~imCase;
            cases{i,j} = imCase;
-           %disp(sum(~imCase(:)))
            if training == false
                empty = (sum(~imCase(:))) < minBlackPixels;
                isEmpty{i,j} = empty;

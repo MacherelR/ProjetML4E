@@ -19,25 +19,15 @@ function [casesImg,lettersPos,labels] = readImages(folderPath,training)
         img = imread(imgPath);
         % Rotation + markers position
         imgGray = rgb2gray(img);
-%         if baseFileName == 'D.jpg' 
-%             imshow(imgGray)
-%             disp('Breakpoint');
-%         end
         [imRot] = RedressImage(imgGray);
         [markers] = findMarkers(imRot);
         
         downMarker = markers(3:end);
         upMarker = markers(1:2);
         % Extract cases
-        %% Seuillage adaptatif voir otsu adapter le min/max et le seuil
+        %% Seuillage adaptatif 
         T = graythresh(imRot);
         imgBin = imbinarize(imRot,T);
-%         if baseFileName == "E.jpg"
-%             figure;
-%             imshow(imgBin);
-%             disp('blabla')
-%         end
-        %imgBin = imRot > T;
         [cases,isEmpty] = getCases(imgBin,upMarker(1),upMarker(2),training);
         casesImg{k} = cases;
         %DisplayImage(cases);
